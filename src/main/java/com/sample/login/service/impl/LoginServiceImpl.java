@@ -1,5 +1,6 @@
 package com.sample.login.service.impl;
 
+import com.sample.login.entity.User;
 import com.sample.login.entity.dto.UserDTO;
 import com.sample.login.repository.UserRepository;
 import com.sample.login.service.LoginService;
@@ -18,8 +19,8 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private UserRepository userRepository;
 
-   /* @Override
-    public Boolean authenticateUser(UserDTO user) {
+
+    public Boolean authenticateUserthrouJPA(UserDTO user) {
         User storedUser = null;
         storedUser = userRepository.findByUsername(user.getUsername());
         if (storedUser != null) {
@@ -28,7 +29,7 @@ public class LoginServiceImpl implements LoginService {
             }
         } else return false;
         return false;
-    }*/
+    }
 
     @Override
     public ResponseEntity<String> authenticateUser(UserDTO payloadUser) {
@@ -42,7 +43,7 @@ public class LoginServiceImpl implements LoginService {
                 }
             }
         }
-        return new ResponseEntity<String> ("Invalid User!", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<String> ("Invalid User!", HttpStatus.UNAUTHORIZED);
     }
 
     @Override
@@ -52,11 +53,11 @@ public class LoginServiceImpl implements LoginService {
             userDTO = userRepository.retrieveSingleUser(payloadUser.getUsername(), payloadUser.getPassword());
         } catch (EmptyResultDataAccessException e){
             System.out.println(e.getCause());
-            return new ResponseEntity<String> ("Invalid User!", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String> ("Invalid User!", HttpStatus.UNAUTHORIZED);
         }
         if (userDTO != null) {
                     return new ResponseEntity<String> ("Successfully logged in!", HttpStatus.OK);
         }
-        return new ResponseEntity<String> ("Invalid User!", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<String> ("Invalid User!", HttpStatus.UNAUTHORIZED);
     }
 }
