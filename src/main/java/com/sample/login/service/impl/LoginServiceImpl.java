@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -20,15 +21,15 @@ public class LoginServiceImpl implements LoginService {
     private UserRepository userRepository;
 
 
-    public Boolean authenticateUserthrouJPA(UserDTO user) {
+    public ResponseEntity<String> authenticateUserthrouJPA(UserDTO user) {
         User storedUser = null;
         storedUser = userRepository.findByUsername(user.getUsername());
         if (storedUser != null) {
             if (storedUser.getUsername().equals(user.getUsername()) && storedUser.getPassword().equals(user.getPassword())) {
-                return true;
+                return new ResponseEntity<String> ("Successfully logged in!", HttpStatus.OK);
             }
-        } else return false;
-        return false;
+        } else return new ResponseEntity<String> ("Invalid User!", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<String> ("Invalid User!", HttpStatus.UNAUTHORIZED);
     }
 
     @Override
@@ -57,6 +58,21 @@ public class LoginServiceImpl implements LoginService {
         }
         if (userDTO != null) {
                     return new ResponseEntity<String> ("Successfully logged in!", HttpStatus.OK);
+        }
+        return new ResponseEntity<String> ("Invalid User!", HttpStatus.UNAUTHORIZED);
+    }
+
+    @Override
+    public ResponseEntity<String> authenticateUserthrouSQL(UserDTO payloadUser) throws SQLException, ClassNotFoundException {
+        UserDTO userDTO=null;
+        try {
+            userDTO = userRepository.retrieveUser(payloadUser.getUsername(), payloadUser.getPassword());
+        } catch (Exception e){
+            System.out.println(e.getCause());
+            return new ResponseEntity<String> ("Invalid User!", HttpStatus.UNAUTHORIZED);
+        }
+        if (userDTO != null) {
+            return new ResponseEntity<String> ("Successfully logged in!", HttpStatus.OK);
         }
         return new ResponseEntity<String> ("Invalid User!", HttpStatus.UNAUTHORIZED);
     }
