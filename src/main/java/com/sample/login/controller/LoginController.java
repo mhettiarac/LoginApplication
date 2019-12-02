@@ -33,4 +33,6 @@ public class LoginController {
     public ResponseEntity<String> doSQLLogin(@RequestBody UserDTO userDTO) throws SQLException, ClassNotFoundException {
         return loginService.authenticateUserthrouSQL(userDTO);
     }
+
+
 }

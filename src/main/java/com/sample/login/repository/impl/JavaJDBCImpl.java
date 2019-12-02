@@ -1,9 +1,12 @@
 package com.sample.login.repository.impl;
 
+import com.sample.login.entity.dto.BookDTO;
 import com.sample.login.entity.dto.UserDTO;
 import com.sample.login.repository.JavaJDBC;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JavaJDBCImpl implements JavaJDBC {
 
@@ -42,6 +45,73 @@ public class JavaJDBCImpl implements JavaJDBC {
         }
 
         return user;
+    }
+
+    public ArrayList<BookDTO> getAllbooksList() throws SQLException {
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        ArrayList<BookDTO> books = null;
+        BookDTO book = null;
+        try{
+            con = this.getDBConnectionEstablished();
+            stmt = con.createStatement();
+            String query ="select * from testapp.books";
+            System.out.println(query);
+            rs = stmt.executeQuery(query);
+            books = new ArrayList<>();
+            while(rs.next()){
+                book= new BookDTO();
+                book.setTitle(rs.getString("title"));
+                book.setAuthor(rs.getString("author"));
+                book.setType(rs.getString("format"));
+                book.setPrice(Double.parseDouble(rs.getString("price")));
+                books.add(book);
+            }
+            //test
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally{
+            if(rs != null) rs.close();
+            stmt.close();
+            con.close();
+        }
+
+        return books;
+    }
+
+    @Override
+    public ArrayList<BookDTO> getbooksbyName(String name) throws SQLException {
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        ArrayList<BookDTO> books = null;
+        BookDTO book = null;
+        try{
+            con = this.getDBConnectionEstablished();
+            stmt = con.createStatement();
+            String query ="SELECT * FROM testapp.books where title LIKE '%"+name+"%'";
+            System.out.println(query);
+            rs = stmt.executeQuery(query);
+            books = new ArrayList<>();
+            while(rs.next()){
+                book= new BookDTO();
+                book.setTitle(rs.getString("title"));
+                book.setAuthor(rs.getString("author"));
+                book.setType(rs.getString("format"));
+                book.setPrice(Double.parseDouble(rs.getString("price")));
+                books.add(book);
+            }
+            //test
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally{
+            if(rs != null) rs.close();
+            stmt.close();
+            con.close();
+        }
+
+        return books;
     }
 
     public Connection getDBConnectionEstablished() throws Exception {
