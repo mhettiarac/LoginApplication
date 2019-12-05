@@ -1,12 +1,11 @@
 package com.sample.login.service.impl;
 
-import com.sample.login.entity.User;
-import com.sample.login.entity.dto.UserDTO;
+import com.sample.login.entity.Login;
+import com.sample.login.entity.dto.LoginDTO;
 import com.sample.login.repository.UserRepository;
 import com.sample.login.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,8 +20,8 @@ public class LoginServiceImpl implements LoginService {
     private UserRepository userRepository;
 
 
-    public ResponseEntity<String> authenticateUserthrouJPA(UserDTO user) {
-        User storedUser = null;
+    public ResponseEntity<String> authenticateUserthrouJPA(LoginDTO user) {
+        Login storedUser = null;
         storedUser = userRepository.findByUsername(user.getUsername());
         if (storedUser != null) {
             if (storedUser.getUsername().equals(user.getUsername()) && storedUser.getPassword().equals(user.getPassword())) {
@@ -33,10 +32,10 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public ResponseEntity<String> authenticateUser(UserDTO payloadUser) {
-        List<UserDTO> userDTOS = userRepository.retrieveUser();
+    public ResponseEntity<String> authenticateUser(LoginDTO payloadUser) {
+        List<LoginDTO> userDTOS = userRepository.retrieveUser();
         if (userDTOS != null) {
-            for (UserDTO u : userDTOS) {
+            for (LoginDTO u : userDTOS) {
                 if (u.getUsername().equals(payloadUser.getUsername())
                         &&
                         u.getPassword().equals(payloadUser.getPassword())){
@@ -48,8 +47,8 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public ResponseEntity<String> authenticateSingleUser(UserDTO payloadUser) {
-        UserDTO userDTO=null;
+    public ResponseEntity<String> authenticateSingleUser(LoginDTO payloadUser) {
+        LoginDTO userDTO=null;
         try {
             userDTO = userRepository.retrieveSingleUser(payloadUser.getUsername(), payloadUser.getPassword());
         } catch (EmptyResultDataAccessException e){
@@ -63,8 +62,8 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public ResponseEntity<String> authenticateUserthrouSQL(UserDTO payloadUser) throws SQLException, ClassNotFoundException {
-        UserDTO userDTO=null;
+    public ResponseEntity<String> authenticateUserthrouSQL(LoginDTO payloadUser) throws SQLException, ClassNotFoundException {
+        LoginDTO userDTO=null;
         try {
             userDTO = userRepository.retrieveUser(payloadUser.getUsername(), payloadUser.getPassword());
         } catch (Exception e){

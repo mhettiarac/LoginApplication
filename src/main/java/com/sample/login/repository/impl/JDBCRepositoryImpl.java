@@ -1,5 +1,6 @@
 package com.sample.login.repository.impl;
 
+import com.sample.login.entity.dto.LoginDTO;
 import com.sample.login.entity.dto.UserDTO;
 import com.sample.login.repository.JDBCRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +22,24 @@ public class JDBCRepositoryImpl implements JDBCRepository {
     private static final String FETCH_USER_BY_USERNAME_SQL = "select * from testapp.user where user.username=? AND password=?";
 
     @Override
-    public List<UserDTO> retrieveUser() {
+    public List<LoginDTO> retrieveUser() {
         return jdbcTemplate.query(FETCH_USER_SQL, (resultSet, i) -> extractUser(resultSet));
     }
 
     @Override
-    public UserDTO retrieveSingleUser(String userName, String passWord) throws EmptyResultDataAccessException {
+    public LoginDTO retrieveSingleUser(String userName, String passWord) throws EmptyResultDataAccessException {
             return jdbcTemplate.queryForObject(FETCH_USER_BY_USERNAME_SQL, new Object[]{userName, passWord}, (resultSet, i) -> extractUser(resultSet));
     }
 
+    @Override
+    public int insertWithJDBCQuery(UserDTO user) {
+        return jdbcTemplate.update(
+                "INSERT INTO user (firstName, lastName, email, userName,password) VALUES (?, ?,?,?,?)",user.getFirstName(),user.getLastName(),user.getEmail(),user.getUserName(),user.getPassword());
+    }
 
-    private UserDTO extractUser(ResultSet resultSet) throws SQLException {
-        UserDTO user = new UserDTO();
+
+    private LoginDTO extractUser(ResultSet resultSet) throws SQLException {
+        LoginDTO user = new LoginDTO();
         user.setId(resultSet.getInt("id"));
         user.setUsername(resultSet.getString("username"));
         user.setPassword(resultSet.getString("password"));

@@ -1,7 +1,10 @@
 CREATE TABLE testapp.user
 (
  id INT PRIMARY KEY AUTO_INCREMENT,
- username VARCHAR(64),
+ firstName VARCHAR(64),
+ lastName VARCHAR(64),
+ email VARCHAR(64) NOT NULL UNIQUE,
+ userName VARCHAR(10),
  password VARCHAR(64)
  );
 

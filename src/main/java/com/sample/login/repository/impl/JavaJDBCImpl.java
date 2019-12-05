@@ -1,12 +1,12 @@
 package com.sample.login.repository.impl;
 
 import com.sample.login.entity.dto.BookDTO;
+import com.sample.login.entity.dto.LoginDTO;
 import com.sample.login.entity.dto.UserDTO;
 import com.sample.login.repository.JavaJDBC;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class JavaJDBCImpl implements JavaJDBC {
 
@@ -18,20 +18,20 @@ public class JavaJDBCImpl implements JavaJDBC {
     private static final String FETCH_USER_BY_USERNAME_SQL = "select * from testapp.user where user.username=? AND password=?";
 
     @Override
-    public UserDTO retrieveUser(String userName, String passWord) throws ClassNotFoundException, SQLException {
+    public LoginDTO retrieveUser(String userName, String passWord) throws ClassNotFoundException, SQLException {
         Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
-        UserDTO user = null;
+        LoginDTO user = null;
         try{
             con = this.getDBConnectionEstablished();
             stmt = con.createStatement();
-            String query ="select * from testapp.user where user.username='"+userName +"' AND password='"+userName+"'";
+            String query ="select user.userName,user.password from testapp.user where user.username='"+userName +"' AND password='"+passWord+"'";
             System.out.println(query);
             rs = stmt.executeQuery(query);
 
             while(rs.next()){
-                user = new UserDTO();
+                user = new LoginDTO();
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
                 System.out.println("Name="+rs.getString("username")+",password="+rs.getString("password"));
@@ -112,6 +112,42 @@ public class JavaJDBCImpl implements JavaJDBC {
         }
 
         return books;
+    }
+
+    @Override
+    public UserDTO createUser(UserDTO userDTO) throws SQLException {
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        LoginDTO user = null;
+        try{
+            con = this.getDBConnectionEstablished();
+            stmt = con.createStatement();
+          /*  String query ="INSERT INTO `testapp`.`user` (`id`, `user.firstName`, `lastName`, `email`, `userName`, `password`) " +
+                    "VALUES (``, `"
+                    +userDTO.getFirstName()+"`, `"
+                    +userDTO.getLastName()+"`, `"
+                    +userDTO.getEmail()+"`, `"
+                    +userDTO.getUserName()+"`, `"
+                    +userDTO.getPassword()+"`)";*/
+            String query="INSERT INTO testapp.user ( user.firstName, user.lastName, user.email, user.userName, user.password) " +
+            "VALUES ('"
+                    +userDTO.getFirstName()+"', '"
+                    +userDTO.getLastName()+"', '"
+                    +userDTO.getEmail()+"', '"
+                    +userDTO.getUserName()+"', '"
+                    +userDTO.getPassword()+"')";
+            System.out.println(query);
+            stmt.executeUpdate(query);
+        } catch (Exception e) {
+            return null;
+        } finally{
+            if(rs != null) rs.close();
+            stmt.close();
+            con.close();
+        }
+
+        return userDTO;
     }
 
     public Connection getDBConnectionEstablished() throws Exception {
