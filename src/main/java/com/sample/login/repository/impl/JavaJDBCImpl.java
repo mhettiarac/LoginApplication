@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public class JavaJDBCImpl implements JavaJDBC {
 
     public final static String DB_DRIVER_CLASS = "com.mysql.jdbc.Driver";
-    public final static String DB_URL = "jdbc:mysql://localhost:3306/testapp";
-    public final static String DB_USERNAME = "root";
-    public final static String DB_PASSWORD = "1qaz2wsx@";
+    public final static String DB_URL = "jdbc:mysql://testapp.ctob98wau1er.us-east-2.rds.amazonaws.com:3306/testapp";
+    public final static String DB_USERNAME = "admin";
+    public final static String DB_PASSWORD = "1qaz2wsx";
 
     private static final String FETCH_USER_BY_USERNAME_SQL = "select * from testapp.user where user.username=? AND password=?";
 
@@ -123,13 +123,6 @@ public class JavaJDBCImpl implements JavaJDBC {
         try{
             con = this.getDBConnectionEstablished();
             stmt = con.createStatement();
-          /*  String query ="INSERT INTO `testapp`.`user` (`id`, `user.firstName`, `lastName`, `email`, `userName`, `password`) " +
-                    "VALUES (``, `"
-                    +userDTO.getFirstName()+"`, `"
-                    +userDTO.getLastName()+"`, `"
-                    +userDTO.getEmail()+"`, `"
-                    +userDTO.getUserName()+"`, `"
-                    +userDTO.getPassword()+"`)";*/
             String query="INSERT INTO testapp.user ( user.firstName, user.lastName, user.email, user.userName, user.password) " +
             "VALUES ('"
                     +userDTO.getFirstName()+"', '"

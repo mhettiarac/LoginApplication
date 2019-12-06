@@ -1,3 +1,9 @@
-From openjdk:8
-copy ./target/LoginApplication-0.0.1-SNAPSHOT.jar LoginApplication-0.0.1-SNAPSHOT.jar
-CMD ["java","-jar","LoginApplication-0.0.1-SNAPSHOT.jar"]
+FROM java:8-jdk-alpine
+
+COPY ./target/LoginApplication-0.0.1-SNAPSHOT.jar .
+
+WORKDIR .
+
+RUN sh -c 'touch LoginApplication-0.0.1-SNAPSHOT.jar'
+
+ENTRYPOINT ["java","-jar","LoginApplication-0.0.1-SNAPSHOT.jar"]

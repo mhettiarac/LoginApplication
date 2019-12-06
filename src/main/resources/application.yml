@@ -3,7 +3,9 @@ spring:
     username: admin
     password: 1qaz2wsx
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://mora-demo-rds.cufpstswot1b.us-east-2.rds.amazonaws.com:3306/testapp
+    url: jdbc:mysql://testapp.ctob98wau1er.us-east-2.rds.amazonaws.com:3306/testapp
+    initialization-mode: always
+    platform: mysql
 
   jpa:
     database: mysql
@@ -11,3 +13,5 @@ spring:
     show-sql: true
     generate-ddl: false
     database-platform: org.hibernate.dialect.MySQLDialect
+  log:
+     level:
