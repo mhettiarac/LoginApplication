@@ -56,7 +56,7 @@ docker container run --name loginappwithjacoco -p 8080:8080 -p 9999:9999 -d demo
 ```
 
 
-**In test project** - To run functional tests:
+**In test project** ( [IntegrationTests](https://github.com/pasanr/IntegrationTest) ) - To run functional tests:
 ```
 mvn clean install -Dmaven.test.failure.ignore=true
 ```
